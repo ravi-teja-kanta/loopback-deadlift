@@ -30,18 +30,22 @@ module.exports = function(backendUrl) {
             );
         }
         
-        function callRemoteMethod(modelName, remoteMethodName, argumentsToRemoteMethod, httpMethod, callback) {
-            // TODO: Handle other httpMethods and corner cases.
-            if (httpMethod === "POST") {
-                request.post(
-                    getUrlWithRemoteMethod(modelName, remoteMethodName),
-                    buildRequestBody(argumentsToRemoteMethod),
-                    requestCallback(callback)
-                );
-            }
-            else {
-                callback(`httpMethod: ${httpMethod} not supported as of now`);
-            }
+        function callRemoteMethod(
+            modelName, 
+            remoteMethodName,
+            argumentsToRemoteMethod,
+            httpMethod,
+            callback) {
+                request({
+                    url: getUrlWithRemoteMethod(modelName, remoteMethodName),
+                    method: httpMethod,
+                    qs: httpMethod === "GET" ? argumentsToRemoteMethod: {},
+                    body: httpMethod !== "GET" ? argumentsToRemoteMethod: {},
+                    "headers": {
+                        "authorization": authenticationToken 
+                    },
+                    json: true
+                }, requestCallback(callback));
         }
         
         function deleteInstanceById(modelName, id, callback) {
