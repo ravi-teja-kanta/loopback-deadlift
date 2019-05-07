@@ -17,7 +17,9 @@
   },
   "keywords": [
     "loopback",
-    "nodejs"
+    "nodejs",
+    "sdk",
+    "connector"
   ],
   "author": "ravi_teja_kanta",
   "license": "ISC",
