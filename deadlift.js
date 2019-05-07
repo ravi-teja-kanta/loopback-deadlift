@@ -1,4 +1,6 @@
 const request = require("request");
+const inflection = require("inflection");
+
 
 module.exports = function(backendUrl) {
     
@@ -6,7 +8,7 @@ module.exports = function(backendUrl) {
 
         function getInstances(modelName, filter, callback) {
             request.get(
-                getAppropriateUrl(modelName, filter),
+                getUrlWithFilter(modelName, filter),
                 buildRequestBody(),
                 requestCallback(callback)   
             );
@@ -14,7 +16,7 @@ module.exports = function(backendUrl) {
         
         function addInstance (modelName, newData, callback) {
             request.post(
-                getAppropriateUrl(modelName),
+                getUrlWithPluralizedModelName(modelName),
                 buildRequestBody(newData),
                 requestCallback(callback)
             );
@@ -22,7 +24,7 @@ module.exports = function(backendUrl) {
         
         function updateInstance(modelName, updateData, callback) {
             request.put(
-                getAppropriateUrl(modelName),
+                getUrlWithPluralizedModelName(modelName),
                 buildRequestBody(updateData),
                 requestCallback(callback)
             );
@@ -49,17 +51,20 @@ module.exports = function(backendUrl) {
                 requestCallback(callback)
             );
         }
-        
+        function getUrlWithPluralizedModelName(modelName) {
+            const pluralize = (word) => inflection.pluralize(word);
+            return `${backendUrl}/${pluralize(modelName)}`;
+        }
         function getUrlWithId(modelName, id) {
-            return `${backendUrl}/${modelName}s/${id}`;
+            return `${getUrlWithPluralizedModelName(modelName)}/${id}`;
         }
         
         function getUrlWithRemoteMethod(modelName, remoteMethodName) {
-            return `${backendUrl}/${modelName}s/${remoteMethodName}`;
+            return `${getUrlWithPluralizedModelName(modelName)}/${remoteMethodName}`;
         }
         
-        function getAppropriateUrl(modelName, filter) {
-            return `${backendUrl}/${modelName}s${handleFilterObject(filter)}`;
+        function getUrlWithFilter(modelName, filter) {
+            return `${getUrlWithPluralizedModelName(modelName)}/${handleFilterObject(filter)}`;
         }
         
         function addWhereToFilter(filter){
