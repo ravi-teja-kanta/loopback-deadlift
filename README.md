@@ -7,7 +7,7 @@ It enables the user to access loopback models in other server side applications.
 ## Usage
 ```javascript
 const backendUrl = "http://localhost:3000/api";
-const deadlift = require("deadlift")(backendUrl);
+const deadlift = require("loopback-deadlift")(backendUrl);
 
 let accessToken = "123"; // loopback's accessToken
 
