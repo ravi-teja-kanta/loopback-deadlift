@@ -15,7 +15,8 @@ let {
   getInstances,
   deleteInstanceById,
   addInstance,
-  updateInstance
+  updateInstance,
+  callRemoteMethod
 } = deadlift(accessToken); // Exposes a set of functions with Authorization using loopbacks accessToken.
 
 getInstances("book", {price:700}, lbCallback); 
@@ -29,6 +30,9 @@ addInstance("book",{name: "Harry Potter", price: 400}, lbCallback)
 
 updateInstance("book", {id:3, genre:"Fiction",name: "Harry Potter", price:400}, lbCallback); 
 // book.updateAll({id:3, genre:"Fiction",name: "Harry Potter", price:400}, ...)
+
+callRemoteMethod("book","getAllBooksUnderThePrice",{ price: 50 }, "GET", lbCallback);
+// book.getAllBooksUnderThePrice(50, ...);
 
 function lbCallback(err, data) {
     console.log(err || data);
